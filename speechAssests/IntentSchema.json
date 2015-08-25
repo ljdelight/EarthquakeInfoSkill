@@ -1,0 +1,13 @@
+{
+  "intents": [
+    {
+      "intent": "GetEarthquakeGivenCityEventIntent",
+      "slots": [
+        {
+          "name": "Location",
+          "type": "LITERAL"
+        }
+      ]
+    }
+  ]
+}
