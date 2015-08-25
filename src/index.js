@@ -13,6 +13,8 @@ var APP_ID = undefined;//replace with 'amzn1.echo-sdk-ams.app.[your-unique-value
  * The AlexaSkill prototype and helper functions
  */
 var AlexaSkill = require('./AlexaSkill');
+var g = require('./GoogleAPIKey');
+var GOOGLE_API_KEY = g.googleAPIKey;
 
 /**
  * This is a child of AlexaSkill.
@@ -49,9 +51,8 @@ EarthquakeInfo.prototype.eventHandlers.onSessionEnded = function (sessionEndedRe
 };
 
 EarthquakeInfo.prototype.intentHandlers = {
-    HelpIntent: function (intent, session, response) {
-        var speechOutput = "I report recent signficant earthquakes";
-        response.tell(speechOutput);
+    GetEarthquakeGivenCityEventIntent: function (intent, session, response) {
+        handleEarthquakesByLocationIntent(intent, session, response);
     }
 };
 
@@ -60,31 +61,33 @@ EarthquakeInfo.prototype.intentHandlers = {
  */
 EarthquakeInfo.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
     console.log("EarthquakeInfo onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
-    handleStartIntent(session, response);
+
+    var speechOutput = "Near what city do you want to search for earthquakes?";
+    response.ask(speechOutput, speechOutput);
 };
 
-function handleStartIntent(session, response) {
-    var MAX_LOCATIONS_TO_SAY = 3;
-    var http = require('http');
-    var options = {
-        hostname: "earthquake.usgs.gov",
-        path: "/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+function handleEarthquakesByLocationIntent(intent, session, response) {
+    var requestedLocation = intent.slots.Location.value;
+    console.log("Location is " + requestedLocation);
+    var geocodeOptions = {
+        hostname: "maps.google.com",
+        path: "/maps/api/geocode/json?key=" + GOOGLE_API_KEY + "&address=" + requestedLocation,
         method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        }
+        headers: { "Content-Type": "application/json" }
     };
-
-    var request = http.get(options, function(usgsResponse) {
-        usgsResponse.setEncoding('utf8');
-        var body = '';
-
-        usgsResponse.on('data', function(chunk) {
-            body += chunk;
-        });
-
-        usgsResponse.on('end', function() {
-            var resp = JSON.parse(body);
+    var geocodeCallback = function(json) {
+        var lat = json.results[0].geometry.location.lat;
+        var lng = json.results[0].geometry.location.lng;
+        var usgsOptions = {
+            hostname: "earthquake.usgs.gov",
+            path: "/fdsnws/event/1/query?format=geojson&latitude=" + lat + "&longitude=" + lng + "&maxradiuskm=100",
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+        var usgsCallback = function(resp) {
+            var MAX_LOCATIONS_TO_SAY = 3;
             var res = '';
             if (resp.metadata.count > 0) {
                 res += resp.metadata.count + " significant earthquakes in the world today. ";
@@ -104,13 +107,31 @@ function handleStartIntent(session, response) {
             }
             console.log(res);
             response.tell(res);
-        });
-    });
-};
+        };
+        httpGetJSON(false, usgsOptions, usgsCallback);
+    }
+    httpGetJSON(true, geocodeOptions, geocodeCallback);
+}
 
+function httpGetJSON(ssl, options, callback) {
+    var http = ((ssl === true) ? require('https') : require('http'));
+    var getCallback = function(response) {
+        var body = '';
+
+        response.on('data', function(chunk) {
+            body += chunk;
+        });
+
+        response.on('end', function() {
+            var json = JSON.parse(body);
+            callback(json);
+        });
+    };
+    var request = http.get(options, getCallback).end();
+}
 
 // Create the handler that responds to the Alexa Request.
 exports.handler = function (event, context) {
     var skill = new EarthquakeInfo();
     skill.execute(event, context);
-};
+}
