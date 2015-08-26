@@ -34,8 +34,8 @@ EarthquakeInfo.prototype.constructor = EarthquakeInfo;
  * Override to initialize session state.
  */
 EarthquakeInfo.prototype.eventHandlers.onSessionStarted = function (sessionStartedRequest, session) {
-    console.log("onSessionStarted requestId: " + sessionStartedRequest.requestId
-        + ", sessionId: " + session.sessionId);
+    console.log("onSessionStarted requestId: " + sessionStartedRequest.requestId +
+        ", sessionId: " + session.sessionId);
 
     // Any session init logic would go here.
 };
@@ -44,8 +44,8 @@ EarthquakeInfo.prototype.eventHandlers.onSessionStarted = function (sessionStart
  * Override to teardown session state.
  */
 EarthquakeInfo.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, session) {
-    console.log("onSessionEnded requestId: " + sessionEndedRequest.requestId
-        + ", sessionId: " + session.sessionId);
+    console.log("onSessionEnded requestId: " + sessionEndedRequest.requestId +
+        ", sessionId: " + session.sessionId);
 
     //Any session cleanup logic would go here.
 };
@@ -66,7 +66,7 @@ EarthquakeInfo.prototype.eventHandlers.onLaunch = function (launchRequest, sessi
     response.ask(speechOutput, speechOutput);
 };
 
-function handleEarthquakesByLocationIntent(intent, session, response) {
+function handleEarthquakesByLocationIntent(intent, session, alexa) {
     var requestedLocation = intent.slots.Location.value;
     console.log("Location is " + requestedLocation);
     var geocodeOptions = {
@@ -75,7 +75,7 @@ function handleEarthquakesByLocationIntent(intent, session, response) {
         method: "GET",
         headers: { "Content-Type": "application/json" }
     };
-    var geocodeCallback = function(json) {
+    var geocodeCallback = function (json) {
         var lat = json.results[0].geometry.location.lat;
         var lng = json.results[0].geometry.location.lng;
         var usgsOptions = {
@@ -86,31 +86,35 @@ function handleEarthquakesByLocationIntent(intent, session, response) {
                 "Content-Type": "application/json"
             }
         };
-        var usgsCallback = function(resp) {
-            var MAX_LOCATIONS_TO_SAY = 3;
-            var res = '';
-            if (resp.metadata.count > 0) {
-                res += resp.metadata.count + " significant earthquakes in the world today. ";
-                if (resp.metadata.count > MAX_LOCATIONS_TO_SAY) {
-                    res += "Here are the latest " + MAX_LOCATIONS_TO_SAY + ".";
-                }
-                // build a string for each location
-                for (var i = 0; i < MAX_LOCATIONS_TO_SAY && i < resp.metadata.count; i++) {
-                    var mag = resp.features[i].properties.mag;
-                    var placeParts = resp.features[i].properties.place.split(' of ');
-                    var location = placeParts[placeParts.length - 1].replace(',', '');
 
-                    res += ' A magnitude ' + mag + ' near ' + location + '.';
-                }
-            } else {
-                res = "No significant earthquakes today.";
-            }
-            console.log(res);
-            response.tell(res);
-        };
-        httpGetJSON(false, usgsOptions, usgsCallback);
-    }
+        httpGetJSON(false, usgsOptions, getUsgsCallback(alexa));
+    };
     httpGetJSON(true, geocodeOptions, geocodeCallback);
+}
+
+function getUsgsCallback(alexa) {
+    return function (resp) {
+        var MAX_LOCATIONS_TO_SAY = 3;
+        var res = '';
+        if (resp.metadata.count > 0) {
+            res += resp.metadata.count + " significant earthquakes in the world today. ";
+            if (resp.metadata.count > MAX_LOCATIONS_TO_SAY) {
+                res += "Here are the latest " + MAX_LOCATIONS_TO_SAY + ".";
+            }
+            // build a string for each location
+            for (var i = 0; i < MAX_LOCATIONS_TO_SAY && i < resp.metadata.count; i++) {
+                var mag = resp.features[i].properties.mag;
+                var placeParts = resp.features[i].properties.place.split(' of ');
+                var location = placeParts[placeParts.length - 1].replace(',', '');
+
+                res += ' A magnitude ' + mag + ' near ' + location + '.';
+            }
+        } else {
+            res = "No significant earthquakes today.";
+        }
+        console.log(res);
+        alexa.tell(res);
+    };
 }
 
 function httpGetJSON(ssl, options, callback) {
@@ -134,4 +138,4 @@ function httpGetJSON(ssl, options, callback) {
 exports.handler = function (event, context) {
     var skill = new EarthquakeInfo();
     skill.execute(event, context);
-}
+};
