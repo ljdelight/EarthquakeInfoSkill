@@ -67,7 +67,8 @@ EarthquakeInfo.prototype.eventHandlers.onLaunch = function (launchRequest, sessi
 };
 
 function handleEarthquakesByLocationIntent(intent, session, alexa) {
-    var requestedLocation = intent.slots.Location.value;
+    var requestedLocation = intent.slots.Location.value.replace(" ", "+");
+
     console.log("Location is " + requestedLocation);
     var geocodeOptions = {
         hostname: "maps.google.com",
@@ -78,6 +79,8 @@ function handleEarthquakesByLocationIntent(intent, session, alexa) {
     var geocodeCallback = function (json) {
         var lat = json.results[0].geometry.location.lat;
         var lng = json.results[0].geometry.location.lng;
+        var loc = json.results[0].address_components[0].long_name;
+
         var usgsOptions = {
             hostname: "earthquake.usgs.gov",
             path: "/fdsnws/event/1/query?format=geojson&latitude=" + lat + "&longitude=" + lng + "&maxradiuskm=100",
@@ -87,17 +90,17 @@ function handleEarthquakesByLocationIntent(intent, session, alexa) {
             }
         };
 
-        httpGetJSON(false, usgsOptions, getUsgsCallback(alexa));
+        httpGetJSON(false, usgsOptions, getUsgsCallback(alexa, loc));
     };
     httpGetJSON(true, geocodeOptions, geocodeCallback);
 }
 
-function getUsgsCallback(alexa) {
+function getUsgsCallback(alexa, loc) {
     return function (resp) {
         var MAX_LOCATIONS_TO_SAY = 3;
         var res = '';
         if (resp.metadata.count > 0) {
-            res += resp.metadata.count + " significant earthquakes in the world today. ";
+            res += resp.metadata.count + " significant earthquakes near " + loc + ". ";
             if (resp.metadata.count > MAX_LOCATIONS_TO_SAY) {
                 res += "Here are the latest " + MAX_LOCATIONS_TO_SAY + ".";
             }
