@@ -53,6 +53,18 @@ EarthquakeInfo.prototype.eventHandlers.onSessionEnded = function (sessionEndedRe
 EarthquakeInfo.prototype.intentHandlers = {
     GetEarthquakeGivenCityEventIntent: function (intent, session, response) {
         handleEarthquakesByLocationIntent(intent, session, response);
+    },
+    GetEarthquakeGivenTwoIntent: function (intent, session, response) {
+        handleEarthquakesByLocationIntent(intent, session, response);
+    },
+    GetEarthquakeGivenThreeIntent: function (intent, session, response) {
+        handleEarthquakesByLocationIntent(intent, session, response);
+    },
+    GetEarthquakeGivenFourIntent: function (intent, session, response) {
+        handleEarthquakesByLocationIntent(intent, session, response);
+    },
+    GetEarthquakeGivenFiveIntent: function (intent, session, response) {
+        handleEarthquakesByLocationIntent(intent, session, response);
     }
 };
 
@@ -67,7 +79,7 @@ EarthquakeInfo.prototype.eventHandlers.onLaunch = function (launchRequest, sessi
 };
 
 function handleEarthquakesByLocationIntent(intent, session, alexa) {
-    var requestedLocation = intent.slots.Location.value.replace(" ", "+");
+    var requestedLocation = Object.keys(intent.slots).map(function(k){return intent.slots[k].value;}).join("+");
 
     console.log("Location is " + requestedLocation);
     var geocodeOptions = {
