@@ -100,7 +100,7 @@ function getUsgsCallback(alexa, loc) {
         var MAX_LOCATIONS_TO_SAY = 3;
         var res = '';
         if (resp.metadata.count > 0) {
-            res += resp.metadata.count + " significant earthquakes near " + loc + ". ";
+            res += resp.metadata.count + " earthquakes near " + loc + ". ";
             if (resp.metadata.count > MAX_LOCATIONS_TO_SAY) {
                 res += "Here are the latest " + MAX_LOCATIONS_TO_SAY + ".";
             }
