@@ -92,10 +92,18 @@ function handleEarthquakesByLocationIntent(intent, session, alexa) {
         var lat = json.results[0].geometry.location.lat;
         var lng = json.results[0].geometry.location.lng;
         var loc = json.results[0].address_components[0].long_name;
+        var date = new Date();
+        date.setDate(date.getDate() - 14);
+        date = date.toISOString();
 
         var usgsOptions = {
             hostname: "earthquake.usgs.gov",
-            path: "/fdsnws/event/1/query?format=geojson&latitude=" + lat + "&longitude=" + lng + "&maxradiuskm=100&minmagnitude=3",
+            path: "/fdsnws/event/1/query?format=geojson" +
+                "&latitude=" + lat +
+                "&longitude=" + lng +
+                "&maxradiuskm=100" +
+                "&minmagnitude=3" +
+                "&starttime=" + date,
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -126,7 +134,7 @@ function getUsgsCallback(alexa, loc) {
                 res += ' A magnitude ' + mag + ' near ' + location + '.';
             }
         } else {
-            res = "No significant earthquakes today.";
+            res = "No significant earthquakes in the last two weeks.";
         }
         console.log(res);
         alexa.tell(res);
