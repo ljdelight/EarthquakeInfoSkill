@@ -95,7 +95,7 @@ function handleEarthquakesByLocationIntent(intent, session, alexa) {
 
         var usgsOptions = {
             hostname: "earthquake.usgs.gov",
-            path: "/fdsnws/event/1/query?format=geojson&latitude=" + lat + "&longitude=" + lng + "&maxradiuskm=100",
+            path: "/fdsnws/event/1/query?format=geojson&latitude=" + lat + "&longitude=" + lng + "&maxradiuskm=100&minmagnitude=3",
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -119,8 +119,9 @@ function getUsgsCallback(alexa, loc) {
             // build a string for each location
             for (var i = 0; i < MAX_LOCATIONS_TO_SAY && i < resp.metadata.count; i++) {
                 var mag = resp.features[i].properties.mag;
-                var placeParts = resp.features[i].properties.place.split(' of ');
-                var location = placeParts[placeParts.length - 1].replace(',', '');
+
+                // The place looks like '93km WSW of Coquimbo, Chile'
+                var location = resp.features[i].properties.place.replace(/.+ of (.+), .+/, "$1");
 
                 res += ' A magnitude ' + mag + ' near ' + location + '.';
             }
