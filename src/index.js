@@ -134,7 +134,7 @@ function getUsgsCallback(alexa, loc) {
                 res += ' A magnitude ' + mag + ' near ' + location + '.';
             }
         } else {
-            res = "No significant earthquakes in the last two weeks.";
+            res = "No earthquakes near " + loc + " in the last 14 days.";
         }
         console.log(res);
         alexa.tell(res);
