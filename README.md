@@ -9,31 +9,21 @@ This is an Amazon Echo skill using the Alexa Skills Kit (ASK) SDK, and can be ea
 
 
 ## Example Calls Using the Echo
+Here are some sample conversations that you can have with Alexa.
 
-Example 1:
-
-Alexa, start Earthquake Info.
-
-*Near what city do you want to search for earthquakes?*
-
-Wichita, Kansas
-
+### Example 1
+Alexa, start Earthquake Info.  
+*Near what city do you want to search for earthquakes?*  
+Wichita, Kansas  
 *Two earthquakes near Wichita. A magnitude 3.1 near Anthony. A magnitude 3.7 near Medford.*
 
+### Example 2
+Alexa, ask Earthquake Info about Palm Springs.  
+*One earthquake near Palm Springs.  A magnitude 4.01 near Big Bear Lake.*
 
-Example 2:
-
-Alexa, ask Earthquake Info about Wichita, Kansas.
-
-*Two earthquakes near Wichita. A magnitude 3.1 near Anthony. A magnitude 3.7 near Medford.*
-
-
-Example 3:
-
-Alexa, ask Earthquake Info about San Francisco, California.
-
+### Example 3
+Alexa, ask Earthquake Info about San Francisco, California.  
 *No earthquakes near San Francisco in the last 14 days.*
-
 
 # Technologies Used
 
