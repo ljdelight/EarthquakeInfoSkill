@@ -1,14 +1,19 @@
 GetEarthquakeGivenCityEventIntent {wichita|Location}
+GetEarthquakeGivenCityEventIntent about {wichita|Location}
 
 GetEarthquakeGivenTwoIntent {wichita|KOne} {kansas|KTwo}
 GetEarthquakeGivenTwoIntent {las|KOne} {vegas|KTwo}
+GetEarthquakeGivenTwoIntent about {wichita|KOne} {kansas|KTwo}
 
 GetEarthquakeGivenThreeIntent {wichita|KOne} {kansas|KTwo} {usa|KThree}
 GetEarthquakeGivenThreeIntent {las|KOne} {vegas|KTwo} {nevada|KThree}
 GetEarthquakeGivenThreeIntent {boca|KOne} {de|KTwo} {yuma|KThree}
+GetEarthquakeGivenThreeIntent about {wichita|KOne} {kansas|KTwo} {usa|KThree}
 
 GetEarthquakeGivenFourIntent {las|KOne} {vegas|KTwo} {nevada|KThree} {usa|KFour}
 GetEarthquakeGivenFourIntent {marina|KOne} {del|KTwo} {rey|KThree} {california|KFour}
+GetEarthquakeGivenFourIntent about {las|KOne} {vegas|KTwo} {nevada|KThree} {usa|KFour}
 
 GetEarthquakeGivenFiveIntent {marina|KOne} {del|KTwo} {rey|KThree} {california|KFour} {usa|KFive}
 GetEarthquakeGivenFiveIntent {boca|KOne} {de|KTwo} {yuma|KThree} {dominican|KFour} {republic|KFive}
+GetEarthquakeGivenFiveIntent about {marina|KOne} {del|KTwo} {rey|KThree} {california|KFour} {usa|KFive}
