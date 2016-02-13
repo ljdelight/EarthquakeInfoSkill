@@ -5,7 +5,7 @@ Earthquake Info reports the magnitude and location of several recent earthquakes
 
 # Features
 
-This is an Amazon Echo skill using the Alexa Skills Kit (ASK) SDK, and can be easily deployed to AWS Lambda. The service does not report earthquakes with a mangitude less than 3.0, or earthquakes over X days.
+This is an Amazon Echo skill using the Alexa Skills Kit (ASK) SDK, and can be easily deployed to AWS Lambda. The service does not report earthquakes with a magnitude less than 3.0, or earthquakes over X days.
 
 
 ## Example Calls Using the Echo
