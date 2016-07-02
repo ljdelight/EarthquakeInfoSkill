@@ -51,6 +51,15 @@ EarthquakeInfo.prototype.eventHandlers.onSessionEnded = function (sessionEndedRe
 };
 
 EarthquakeInfo.prototype.intentHandlers = {
+  "AMAZON.HelpIntent": function(intent, session, response) {
+    response.ask("Earthquake info reports earthquakes for a given location. I report quakes within 2 weeks, 100 kilometers, and magnitutde 3 and higher. Near what city do you want to search for earthquakes?");
+  },
+  "AMAZON.CancelIntent": function (intent, session, response) {
+    response.tell("")
+  },
+  "AMAZON.StopIntent": function (intent, session, response) {
+    response.tell("")
+  },
   GetEarthquakeGivenCityEventIntent: function (intent, session, response) {
     handleEarthquakesByLocationIntent(intent, session, response);
   },

@@ -1,6 +1,15 @@
 {
   "intents": [
     {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
       "intent": "GetEarthquakeGivenCityEventIntent",
       "slots": [
         {
