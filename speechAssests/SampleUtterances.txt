@@ -4,6 +4,7 @@ GetEarthquakeGivenCityEventIntent about {wichita|Location}
 GetEarthquakeGivenTwoIntent {wichita|KOne} {kansas|KTwo}
 GetEarthquakeGivenTwoIntent {las|KOne} {vegas|KTwo}
 GetEarthquakeGivenTwoIntent about {wichita|KOne} {kansas|KTwo}
+GetEarthquakeGivenTwoIntent about {San Francisco|KOne} {California|KTwo}
 
 GetEarthquakeGivenThreeIntent {wichita|KOne} {kansas|KTwo} {usa|KThree}
 GetEarthquakeGivenThreeIntent {las|KOne} {vegas|KTwo} {nevada|KThree}
