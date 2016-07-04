@@ -52,7 +52,7 @@ EarthquakeInfo.prototype.eventHandlers.onSessionEnded = function (sessionEndedRe
 
 EarthquakeInfo.prototype.intentHandlers = {
   "AMAZON.HelpIntent": function(intent, session, response) {
-    response.ask("Earthquake info reports earthquakes for a given location. I report quakes within 2 weeks, 100 kilometers, and magnitutde 3 and higher. Near what city do you want to search for earthquakes?");
+    handleHelpRequest(intent, session, response);
   },
   "AMAZON.CancelIntent": function (intent, session, response) {
     response.tell("")
@@ -77,6 +77,10 @@ EarthquakeInfo.prototype.intentHandlers = {
   }
 };
 
+function handleHelpRequest(intent, session, alexa) {
+  alexa.ask("Earthquake info reports earthquakes for a given location. I report quakes within 2 weeks, 100 kilometers, and magnitutde 3 and higher. Near what city do you want to search for earthquakes?");
+}
+
 /**
 * Launching without specifying an intent, route to the default.
 */
@@ -89,6 +93,11 @@ EarthquakeInfo.prototype.eventHandlers.onLaunch = function (launchRequest, sessi
 
 function handleEarthquakesByLocationIntent(intent, session, alexa) {
   var requestedLocation = Object.keys(intent.slots).map(function(k){return intent.slots[k].value;}).join("+");
+  if (!Boolean(requestedLocation)) {
+    console.log("Requested location is NULL. Prompting help.");
+    handleHelpRequest(intent, session, alexa);
+    return;
+  }
 
   console.log("Location is " + requestedLocation);
   var geocodeOptions = {
