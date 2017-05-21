@@ -128,7 +128,7 @@ function handleEarthquakesByLocationIntent(intent, session, alexa) {
       }
     };
 
-    httpGetJSON(false, usgsOptions, getUsgsCallback(alexa, loc));
+    httpGetJSON(true, usgsOptions, getUsgsCallback(alexa, loc));
   };
   httpGetJSON(true, geocodeOptions, geocodeCallback);
 }
@@ -160,6 +160,7 @@ function getUsgsCallback(alexa, loc) {
 }
 
 function httpGetJSON(ssl, options, callback) {
+  console.log("HTTP get using options " + JSON.stringify(options))
   var http = ((ssl === true) ? require('https') : require('http'));
   var getCallback = function(response) {
     var body = '';
@@ -169,6 +170,7 @@ function httpGetJSON(ssl, options, callback) {
     });
 
     response.on('end', function() {
+      console.log("Response is <<" + body + ">>")
       var json = JSON.parse(body);
       callback(json);
     });
